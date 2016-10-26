@@ -38,19 +38,26 @@ function createStandAlone(cb){
     var pathToStandAloneFile = standAloneFile + ".js";
     var pathToStandAloneMinifiedFile = standAloneFile + ".min.js";
 
+    var pkgFilePath = path.resolve("./")+"/package.json";
+
     var tempConfigFilePath = path.resolve("./")+"/package_temp.json";
     var tempDirectoryPath = rootPath + "/" + moduleName;
+
+    fs.copySync(pkgFilePath,tempConfigFilePath);
+
     var tempConfig = json;
     tempConfig.main = moduleName + "/" + mainFileName;
 
-    fs.writeFileSync(tempConfigFilePath,JSON.stringify({main:moduleName + "/" + mainFileName, system:json.system}));
+    fs.writeFileSync(pkgFilePath,JSON.stringify({main:moduleName + "/" + mainFileName,
+        dependencies:json.dependencies,
+        system:json.system}));
 
 
     fs.copySync(rootPath+"/dist",tempDirectoryPath)
 
     var buildOptions = {
         system: {
-            config:tempConfigFilePath+"!npm"
+            config:pkgFilePath+"!npm"
         },
         outputs: {
             "+standalone": {
@@ -87,6 +94,7 @@ function createStandAlone(cb){
 
     function cleanTempFiles() {
 
+        fs.copySync(tempConfigFilePath,pkgFilePath);
         fs.removeSync(tempConfigFilePath);
         fs.removeSync(tempDirectoryPath);
     }
