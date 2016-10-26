@@ -5,13 +5,11 @@ import {DOMElement} from "./core/DOMElement";
 
 export var rama:{createElement:Function} = {createElement:createElementFunction};
 
-import { HTMLProps } from "react";
-import {ClassAttributes} from "react";
-import {HTMLAttributes} from "react";
+import React = require("react")
 
 declare module "react" {
 
-    interface HTMLProps<T> extends HTMLAttributes<T>, ClassAttributes<T> {
+    interface HTMLProps<T> extends React.HTMLAttributes<T>, React.ClassAttributes<T> {
         [x:string]:any;
     }
 }
