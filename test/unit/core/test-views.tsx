@@ -3,8 +3,6 @@ import {rama} from "../../../src/index"
 
 import {ViewBase} from "../../../src/core/ViewBase";
 import {UIElement} from "../../../src/core/UIElement";
-import {Skin} from "../../../src/Skin";
-import {VNode} from "../../../src/core/utils/dom";
 import {DataGroup} from "../../../src/DataGroup";
 import {ArrayCollection} from "../../../src/core/collections/ArrayCollection";
 import {DOMElement} from "../../../src/core/DOMElement";
@@ -24,7 +22,7 @@ export class TestComp extends UIElement
     {
         this.customElements = elements;
     }
-    render():VNode{
+    render(){
         return null
     }
 
@@ -40,7 +38,7 @@ export class MyTestView extends ViewBase
         console.log("hahahahahaha");
         this.dispatchEvent(new Event("yay"));
     }
-    render() {
+    render(){
         return <div>
             <div  onclick={(event:Event)=>{this.handleClick()}} id="myDiv"></div>
             <TestComp />
@@ -51,7 +49,7 @@ export class MyTestView extends ViewBase
 export class TestView extends ViewBase
 {
 
-    render():VNode {
+    render() {
         return <div>
             <div id="myDiv"></div>
             <TestComp />
@@ -62,7 +60,7 @@ export class TestView extends ViewBase
 export class TestCustomElementRootNodeView extends ViewBase
 {
 
-    render():VNode {
+    render() {
         return <TestComp />;
     }
 }
@@ -72,7 +70,7 @@ export class TestViewTransclude extends ViewBase
 
     testComp:TestComp;
 
-    render():VNode {
+    render() {
         return <div>
             <TestComp id="testComp">
                 <customContent>
@@ -86,7 +84,7 @@ export class TestViewTransclude extends ViewBase
 export class TestViewWithStates extends ViewBase
 {
 
-    render():VNode {
+    render() {
         return <div>
             <states>
                 <state name="state1"/>

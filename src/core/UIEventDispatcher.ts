@@ -1,6 +1,7 @@
 
+import React = require("react")
 
-export abstract class UIEventDispatcher implements EventTarget
+export abstract class UIEventDispatcher extends React.Component<any,any> implements EventTarget
 {
     private eventListenersDictionary = {};
 
@@ -8,6 +9,7 @@ export abstract class UIEventDispatcher implements EventTarget
 
     constructor(element?:Node)
     {
+        super();
         this.__setElementRef(element)
     }
 
@@ -79,5 +81,9 @@ export abstract class UIEventDispatcher implements EventTarget
             }
         }
     }
+
+    render(){
+        return null;
+    };
 
 }

@@ -3,8 +3,26 @@ import {createVNode as createElementFunction} from "./core/utils/dom";
 import {UIElement} from "./core/UIElement";
 import {DOMElement} from "./core/DOMElement";
 
-
 export var rama:{createElement:Function} = {createElement:createElementFunction};
+
+import { HTMLProps } from "react";
+import {ClassAttributes} from "react";
+import {HTMLAttributes} from "react";
+
+declare module "react" {
+
+    interface HTMLProps<T> extends HTMLAttributes<T>, ClassAttributes<T> {
+        [x:string]:any;
+    }
+}
+
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            [x:string]:any;
+        }
+    }
+}
 
 export var render = function (elementClass:new()=>any, node:HTMLElement) {
 

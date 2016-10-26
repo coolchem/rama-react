@@ -7,11 +7,16 @@
   "files": [
     "dist"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/react": "0.14.41",
+    "@types/react-dom": "0.14.18",
+    "react": "15.3.2",
+    "react-dom": "15.3.2"
+  },
   "description": "",
   "devDependencies": {
-    "@types/jasmine": "^2.5.35",
-    "@types/node": "^6.0.45",
+    "@types/jasmine": "2.5.35",
+    "@types/node": "6.0.45",
     "coveralls": "2.11.14",
     "cpy": "4.0.1",
     "cross-spawn": "4.0.2",
@@ -26,7 +31,7 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "karma-mocha-reporter": "2.2.0",
     "karma-phantomjs-launcher": "1.0.2",
-    "karma-steal-npm": "0.1.4",
+    "karma-steal-npm": "0.1.5",
     "minimist": "1.2.0",
     "phantomjs-prebuilt": "2.1.13",
     "steal": "0.16.41",
