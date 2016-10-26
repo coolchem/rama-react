@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "noLib": false,
+    "jsx":"react",
+    "reactNamespace":"rama",
+    "emitDecoratorMetadata":true,
+    "experimentalDecorators":true,
+    "noEmitOnError":true,
+    "skipLibCheck":true,
+    "moduleResolution":"node"
+  },
+  "exclude": [
+    "node_modules",
+    ".c9"
+  ]
+}

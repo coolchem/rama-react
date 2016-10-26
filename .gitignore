@@ -1,0 +1,17 @@
+node_modules
+.idea
+**/*.iml
+src/**/*.d.ts
+!src/typings/jsx.d.ts
+test/**/*.d.ts
+.DS_STORE
+src/**/*.js
+test/**/*.js
+**/*.map
+coverage
+dist
+npm-debug.log
+.env
+docs
+temp
+tmp
