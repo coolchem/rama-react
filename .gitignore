@@ -10,6 +10,7 @@ test/**/*.js
 **/*.map
 coverage
 dist
+standalone
 npm-debug.log
 .env
 docs

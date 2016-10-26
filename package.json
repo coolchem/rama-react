@@ -5,7 +5,8 @@
     "name": ""
   },
   "files": [
-    "dist"
+    "dist",
+    "standalone"
   ],
   "dependencies": {
     "@types/react": "0.14.41",
@@ -55,9 +56,7 @@
   },
   "system": {
     "npmIgnore": [
-      "devDependencies",
-      "connect",
-      "serve-static"
+      "devDependencies"
     ],
     "npmAlgorithm": "flat"
   },
