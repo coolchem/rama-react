@@ -25,18 +25,32 @@ function createStandAlone(cb){
 
     var stealTools = require("steal-tools");
 
+    var rootPath = path.resolve("./");
     json = JSON.parse(fs.readFileSync(path.resolve("./package.json"), 'utf8'));
     var version = json.version;
     var moduleName = json.name;
+
+    var mainFilePathArray = json.main.split("/");
+    var mainFileName = mainFilePathArray[mainFilePathArray.length-1];
 
     var standAloneFile = "./standalone/" + moduleName;
 
     var pathToStandAloneFile = standAloneFile + ".js";
     var pathToStandAloneMinifiedFile = standAloneFile + ".min.js";
 
+    var tempConfigFilePath = path.resolve("./")+"/package_temp.json";
+    var tempDirectoryPath = rootPath + "/" + moduleName;
+    var tempConfig = json;
+    tempConfig.main = moduleName + "/" + mainFileName;
+
+    fs.writeFileSync(tempConfigFilePath,JSON.stringify({main:moduleName + "/" + mainFileName, system:json.system}));
+
+
+    fs.copySync(rootPath+"/dist",tempDirectoryPath)
+
     var buildOptions = {
         system: {
-            config:path.resolve("./")+"/package.json!npm"
+            config:tempConfigFilePath+"!npm"
         },
         outputs: {
             "+standalone": {
@@ -56,17 +70,26 @@ function createStandAlone(cb){
 
         //buiding minified version
         stealTools.export(buildOptions).then(function(){
-
+            cleanTempFiles();
             cb()
 
         },function(err){
+            cleanTempFiles();
             cb(err)
         })
 
 
     },function(err){
+        cleanTempFiles();
         cb(err)
     })
+
+
+    function cleanTempFiles() {
+
+        fs.removeSync(tempConfigFilePath);
+        fs.removeSync(tempDirectoryPath);
+    }
 }
 
 function build(isRelease){
