@@ -53,12 +53,6 @@
     "url": "",
     "type": ""
   },
-  "system": {
-    "npmIgnore": [
-      "devDependencies"
-    ],
-    "npmAlgorithm": "flat"
-  },
   "scripts": {
     "build": "node scripts/build.js",
     "build-release": "npm run build release",
