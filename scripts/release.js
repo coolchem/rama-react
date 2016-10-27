@@ -9,8 +9,6 @@ if(argv._ && argv._.length > 0) //look release build
 
     util.series(["npm test",
         "npm run build-release",
-        "git add -A",
-        "git commit -m" + '"'+"releasing new version" +'"',
         cmd,
         "git push","git push --tags"],function(err){
         if(err)
