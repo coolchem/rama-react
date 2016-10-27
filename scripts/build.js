@@ -5,6 +5,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var cpy = require("cpy");
 var path = require("path");
 var fs = require("fs-extra");
+var webpack = require("webpack");
 
 
 if(argv._ && argv._.length > 0) //look release build
@@ -21,83 +22,39 @@ else //do dev build
     build();
 }
 
+
 function createStandAlone(cb){
 
-    var stealTools = require("steal-tools");
-
-    var rootPath = path.resolve("./");
     json = JSON.parse(fs.readFileSync(path.resolve("./package.json"), 'utf8'));
-    var version = json.version;
     var moduleName = json.name;
 
-    var mainFilePathArray = json.main.split("/");
-    var mainFileName = mainFilePathArray[mainFilePathArray.length-1];
-
-    var standAloneFile = "./standalone/" + moduleName;
-
-    var pathToStandAloneFile = standAloneFile + ".js";
-    var pathToStandAloneMinifiedFile = standAloneFile + ".min.js";
-
-    var pkgFilePath = path.resolve("./")+"/package.json";
-
-    var tempConfigFilePath = path.resolve("./")+"/package_temp.json";
-    var tempDirectoryPath = rootPath + "/" + moduleName;
-
-    fs.copySync(pkgFilePath,tempConfigFilePath);
-
-    var tempConfig = json;
-    tempConfig.main = moduleName + "/" + mainFileName;
-
-    fs.writeFileSync(pkgFilePath,JSON.stringify({main:moduleName + "/" + mainFileName,
-        dependencies:json.dependencies,
-        system:json.system}));
-
-
-    fs.copySync(rootPath+"/dist",tempDirectoryPath)
-
-    var buildOptions = {
-        system: {
-            config:pkgFilePath+"!npm"
-        },
-        outputs: {
-            "+standalone": {
-                dest: pathToStandAloneFile
-            }
+    var webPackConfig = {
+        context: path.resolve("./"),
+        entry: json.main,
+        output: {
+            path: path.resolve("./") + "/standalone",
+            filename: moduleName + ".js",
+            library:util.camelCase(moduleName)
         }
     };
 
-    stealTools.export(buildOptions).then(function(){
+    webpack(webPackConfig, function(err, stats) {
 
-        buildOptions.outputs = {
-            "+standalone": {
-                dest: pathToStandAloneMinifiedFile,
-                minify:true
-            }
-        };
+        if(err)
+            cb(err);
+        else
+        {
+            webPackConfig.output.filename = moduleName +".min.js";
+            webPackConfig.plugins = [new webpack.optimize.UglifyJsPlugin({
+                compress: { warnings: false }
+            })];
 
-        //buiding minified version
-        stealTools.export(buildOptions).then(function(){
-            cleanTempFiles();
-            cb()
+            webpack(webPackConfig, function(err, stats) {
 
-        },function(err){
-            cleanTempFiles();
-            cb(err)
-        })
-
-
-    },function(err){
-        cleanTempFiles();
-        cb(err)
-    })
-
-
-    function cleanTempFiles() {
-
-        fs.copySync(tempConfigFilePath,pkgFilePath);
-        fs.removeSync(tempConfigFilePath);
-        fs.removeSync(tempDirectoryPath);
-    }
+                cb(err);
+            });
+        }
+    });
 }
 
 function build(isRelease){

@@ -37,7 +37,8 @@
     "phantomjs-prebuilt": "2.1.13",
     "steal": "0.16.41",
     "steal-tools": "^0.16.5",
-    "typescript": "2.0.3"
+    "typescript": "2.0.3",
+    "webpack": "1.13.3"
   },
   "engines": {
     "node": ">=5.0.0"
@@ -71,6 +72,7 @@
     "release-minor": "node scripts/release.js minor",
     "release-patch": "node scripts/release.js patch",
     "test": "node scripts/test.js",
+    "webpack": "webpack",
     "test-local-chrome": "node scripts/test.js local Chrome",
     "test-local-firefox": "node scripts/test.js local Firefox"
   },
