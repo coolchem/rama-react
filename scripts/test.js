@@ -7,7 +7,7 @@ if(argv._ && argv._.length > 0) //look release build
 {
     var subCommand = argv._[0];
     var browser = "PhantomJS";
-    var testCMD = "karma start karma.conf.local.js";
+    var testCMD = "karma start";
     if(argv._.length == 2)
     {
         browser = argv._[1];

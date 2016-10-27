@@ -4,22 +4,29 @@ module.exports = function(config) {
         autoWatch: false,
 
         singleRun: false,
-        frameworks: ['jasmine','steal-npm'],
+        frameworks: ['jasmine'],
 
-        steal:{
-          files:['src/**/*.js',"test/**/*.js.map","src/**/*.js.map"],
-          testFiles:['test/**/*.js']
-        },
+        files:['test/**/*.js'],
 
-        reporters: ['coverage','mocha'],
+        reporters: ['coverage','mocha','kjhtml'],
         preprocessors: {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            'src/**/*.js': ['coverage']
+            'src/**/*.js': ['coverage'],
+            'test/**/*.js': ['webpack']
         },
 
-        "browsers":['Chrome'],
+        webpack: {
+            resolve: {
+                modulesDirectories: [
+                    "",
+                    "src",
+                    "node_modules"
+                ]
+            }
+        },
+
         coverageReporter: {
             dir : 'coverage/',
             reporters: [

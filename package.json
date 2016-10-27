@@ -32,11 +32,9 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "karma-mocha-reporter": "2.2.0",
     "karma-phantomjs-launcher": "1.0.2",
-    "karma-steal-npm": "0.1.5",
+    "karma-webpack": "1.8.0",
     "minimist": "1.2.0",
     "phantomjs-prebuilt": "2.1.13",
-    "steal": "0.16.41",
-    "steal-tools": "^0.16.5",
     "typescript": "2.0.3",
     "webpack": "1.13.3"
   },
@@ -72,7 +70,6 @@
     "release-minor": "node scripts/release.js minor",
     "release-patch": "node scripts/release.js patch",
     "test": "node scripts/test.js",
-    "webpack": "webpack",
     "test-local-chrome": "node scripts/test.js local Chrome",
     "test-local-firefox": "node scripts/test.js local Firefox"
   },
