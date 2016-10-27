@@ -16,7 +16,7 @@ if(argv._ && argv._.length > 0) //look release build
     {
 
         testCMD = testCMD + " --browsers " + browser;
-        util.series(["npm run build",testCMD], function(err){
+        util.series([testCMD], function(err){
 
             if(err)
             {
@@ -32,7 +32,7 @@ if(argv._ && argv._.length > 0) //look release build
 else //do dev build
 {
 
-    util.series(["npm run build","karma start --single-run --no-auto-watch --browsers PhantomJS"], function(err){
+    util.series(["karma start --single-run --no-auto-watch --browsers PhantomJS"], function(err){
 
         if(err)
         {
@@ -43,5 +43,3 @@ else //do dev build
         process.exit(0);
     });
 }
-
-
