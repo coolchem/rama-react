@@ -6,7 +6,7 @@ module.exports = function(config) {
         singleRun: false,
         frameworks: ['jasmine'],
 
-        files:['test/**/*.js'],
+        files:['test/**/*.spec.js','test/**/*.test.js'],
 
         reporters: ['coverage','mocha','kjhtml'],
         preprocessors: {
