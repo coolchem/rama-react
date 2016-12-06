@@ -1,106 +1,60 @@
 
 
 var util = require('./util');
-var argv = require('minimist')(process.argv.slice(2));
-var cpy = require("cpy");
 var path = require("path");
 var fs = require("fs-extra");
 var webpack = require("webpack");
+var projectConfig = require("../project.config");
 
+function createMinifiedFile(cb){
 
-if(argv._ && argv._.length > 0) //look release build
-{
-    var subCommand = argv._[0];
-    if(subCommand.toLowerCase() === "release")
-    {
-        build(true);
-    }
-
-}
-else //do dev build
-{
-    build();
-}
-
-
-function createStandAlone(cb){
-
-    json = JSON.parse(fs.readFileSync(path.resolve("./package.json"), 'utf8'));
-    var moduleName = json.name;
-
-    var webPackConfig = {
-        context: path.resolve("./"),
-        entry: json.main,
-        output: {
-            path: path.resolve("./") + "/standalone",
-            filename: moduleName + ".js",
-            library:util.camelCase(moduleName)
-        }
-    };
+    var webPackConfig = require("../webpack/prod.config")({env:"production",minify:true});
 
     webpack(webPackConfig, function(err, stats) {
 
-        if(err)
-            cb(err);
-        else
-        {
-            webPackConfig.output.filename = moduleName +".min.js";
-            webPackConfig.plugins = [new webpack.optimize.UglifyJsPlugin({
-                compress: { warnings: false }
-            })];
-
-            webpack(webPackConfig, function(err, stats) {
-
-                cb(err);
-            });
-        }
+        cb(err);
     });
 }
 
-function build(isRelease){
+var isProductionBuild = process.env.NODE_ENV == 'production';
 
-    var cmd = "tsc";
+var cmd = "tsc";
 
-    if(isRelease)
-        cmd = cmd + " --declaration";
-    else
-        cmd = cmd + " --sourceMap";
+if(isProductionBuild)
+    cmd = cmd + " --declaration --outDir " +  projectConfig.distDirTemp;
+else
+    cmd = cmd + " --sourceMap";
 
-    util.series(["npm run clean",cmd], function (err) {
+util.series(["npm run clean",cmd], function (err) {
 
-        if(err)
-        {
-            console.log(err);
-            process.exit(1);
-        }
-        else
-        {
-            if(isRelease)
+    if(err)
+    {
+        console.log(err);
+        process.exit(1);
+    }
+
+    if(isProductionBuild)
+    {
+        util.exec("webpack -p",function (err) {
+
+            if(err)
             {
-                cpy(["**/*.js","**/*.d.ts"],"../dist",{cwd:process.cwd()+"/src",parents: true, nodir: true}).then(function(){
-
-                    createStandAlone(function (err) {
-
-                        if(err)
-                        {
-                            console.log(err);
-                            process.exit(1);
-                        }
-                        else
-                        {
-                            process.exit(0);
-                        }
-                    })
-
-                },function(err){
-
-                    console.log(err);
-                    process.exit(1);
-                })
+                console.log(err);
+                process.exit(1);
             }
 
-        }
-    });
+            createMinifiedFile(function (error) {
+                if(error)
+                {
+                    console.log(error);
+                    process.exit(1);
+                }
+                fs.removeSync(projectConfig.distDirTemp);
+                process.exit(0);
+            })
 
-}
+        })
+    }
+
+});
 

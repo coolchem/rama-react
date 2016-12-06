@@ -1,55 +1,46 @@
 
-var webpack = require("webpack");
+
+var reporters = [,'mocha','kjhtml'];
+var webpackConfig;
+var isLocalTesting = true;
+
+if(process.env.NODE_ENV == "test" || process.env.NODE_ENV == "testing") // this means it is not a local test environment
+{
+    reporters = reporters.concat(['coverage','remap-coverage']);
+    isLocalTesting = false;
+}
+
+webpackConfig = require("./webpack/test.config")({env:"test", isLocalTesting:isLocalTesting});
+
 module.exports = function(config) {
     config.set({
         basePath: '',
         autoWatch: true,
+        autoWatchBatchDelay:300,
 
         singleRun: false,
         frameworks: ['jasmine'],
 
-        files:['test/**/*.spec.ts','test/**/*.test.ts'],
+        files:[
+            {pattern: './karma-test-shim.js', watched: false}
+        ],
 
-        reporters: ['coverage','mocha','kjhtml'],
+        reporters: reporters,
         preprocessors: {
-            // source files, that you wanna generate coverage for
-            // do not include tests or libraries
-            // (these files will be instrumented by Istanbul)
-            'src/**/*.js': ['coverage'],
-            'test/**/*.ts': ['webpack','sourcemap'],
-            'test/**/*.tsx': ['webpack','sourcemap']
+            './karma-test-shim.js': ['coverage','webpack','sourcemap']
         },
 
-        webpack: {
-            resolve: {
-                extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
-                modulesDirectories: [
-                    "",
-                    "src",
-                    "node_modules"
-                ]
-            },
-            module: {
-                loaders: [
-                    // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-                    { test: /\.tsx?$/, loader: 'ts-loader' }
-                ]
-            },
-            plugins: [
-                new webpack.SourceMapDevToolPlugin({
-                    filename: null, // if no value is provided the sourcemap is inlined
-                    test: /\.(ts|js)($|\?)/i // process .js and .ts files only
-                })
-            ]
-        },
+        webpack: webpackConfig,
 
         coverageReporter: {
-            dir : 'coverage/',
-            reporters: [
-                { type: 'html', subdir: 'html' },
-                { type: 'lcovonly', subdir: 'lcov' },
-                { type: 'cobertura', subdir: 'cobertura' }
-            ]
+            type: 'in-memory'
+        },
+
+        remapCoverageReporter: {
+            'text-summary': null,
+            lcovonly:"./coverage/lcov.info",
+            html: './coverage/html',
+            cobertura: './coverage/cobertura/cobertura-coverage.xml'
         }
     });
 };

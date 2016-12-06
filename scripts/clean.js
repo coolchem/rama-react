@@ -1,17 +1,15 @@
+
+
 var del = require('del');
+var projectConfig = require('../project.config');
 
-var paths = del.sync(['coverage',
-    'src/**/*.js',
-    'test/**/*.js',
-    'dist',
-    'standalone',
-    '**/*.map',
-    '!node_modules/**/*.map',
-    'src/**/*.d.ts',
-    '!src/typings/**/*.d.ts',
-    'test/**/*.d.ts'
-    ]);
-
+var paths = del.sync([
+    'coverage',
+    projectConfig.srcDir +'/**/*.js',
+    projectConfig.srcDir +'/**/*.map',
+    projectConfig.testsDir+"/**/*.js",
+    projectConfig.testsDir +'/**/*.map',
+    projectConfig.distDir,projectConfig.distDirTemp]);
 
 console.log('Deleted files/folders:\n', paths.join('\n'));
 
